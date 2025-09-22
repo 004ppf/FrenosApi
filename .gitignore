@@ -131,6 +131,10 @@ dmypy.json
 # Solo excluir archivos de datos grandes
 falla_frenos.csv
 
+# Incluir archivos de modelo necesarios para producción
+# modelo_frenos.pkl
+# features_frenos.pkl
+
 # Archivos de configuración local
 config.ini
 .env.local
