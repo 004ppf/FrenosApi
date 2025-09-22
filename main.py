@@ -7,9 +7,18 @@ import os
 # Ruta base del proyecto
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Cargar modelo y features con rutas absolutas
-model = joblib.load(os.path.join(BASE_DIR, "modelo_frenos.pkl"))
-features = joblib.load(os.path.join(BASE_DIR, "features_frenos.pkl"))
+# Cargar modelo y features con manejo de errores
+try:
+    model = joblib.load(os.path.join(BASE_DIR, "modelo_frenos.pkl"))
+    features = joblib.load(os.path.join(BASE_DIR, "features_frenos.pkl"))
+    model_loaded = True
+    print("✅ Modelo cargado correctamente")
+except FileNotFoundError as e:
+    print(f"⚠️ Archivos de modelo no encontrados: {e}")
+    print("⚠️ La API funcionará en modo de prueba")
+    model = None
+    features = None
+    model_loaded = False
 
 # Crear instancia de la API
 app = FastAPI(title="API Predicción de Ventas")
@@ -34,6 +43,14 @@ def read_root():
 # Ruta POST para predicciones
 @app.post("/predecir")
 def predecir(data: DatosEntrada):
+    if not model_loaded:
+        return {
+            "error": "Modelo no disponible",
+            "mensaje": "El modelo de predicción no está cargado. Contacta al administrador.",
+            "prediccion_falla_frenos": None,
+            "estado": "modo_prueba"
+        }
+    
     # Convertir entrada en DataFrame
     df = pd.DataFrame([{
         "kms_recorridos": data.kms_recorridos,
