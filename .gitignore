@@ -128,11 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Modelos y datos sensibles
-*.pkl
-*.joblib
-*.csv
-*.json
+# Solo excluir archivos de datos grandes
+falla_frenos.csv
 
 # Archivos de configuración local
 config.ini
